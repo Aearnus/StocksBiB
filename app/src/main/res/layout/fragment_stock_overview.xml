@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <TextView
+        android:id="@+id/mainTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Stocks"
+        android:textAlignment="center"
+        android:textSize="50sp" />
+
+    <TextView
+        android:id="@+id/subTItle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Business is Booming"
+        android:textAlignment="center"
+        android:textColor="#FF7930"
+        android:textSize="36sp"
+        android:layout_below="@+id/mainTitle"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/swipeToContinue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Swipe to continue!"
+        android:textAlignment="center"
+        android:textSize="32sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/personalInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/subTItle"
+        android:text="Made with love by Tyler Limkemann.\n\nPlay the online version at http://aearnus.github.io/stocks/stocks.html"
+        android:textAlignment="center"
+        android:textSize="32sp" />
+
+</RelativeLayout>
