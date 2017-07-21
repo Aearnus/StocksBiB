@@ -26,8 +26,23 @@ public class UpdateThread extends Thread {
         buySellFragment.setUpdateThread(this);
         doTick = true;
     }
+
     public void setGraphHolder(SurfaceHolder inGraphHolder) {
         graphHolder = inGraphHolder;
+    }
+    private void drawGraph() {
+        if (graphHolder != null) {
+            Canvas canvas = graphHolder.lockCanvas();
+            if (canvas != null) {
+                canvas.drawRGB(255, 255, 255);
+                String textToDraw =
+                        "StockValue: " + gameData.stockValue + "\n " +
+                                "Money: " + gameData.money + "\n " +
+                                "Stocks: " + gameData.stocks;
+                canvas.drawText(textToDraw, 10f, 200f, paint);
+                graphHolder.unlockCanvasAndPost(canvas);
+            }
+        }
     }
 
     private void updateGame() {
@@ -35,18 +50,7 @@ public class UpdateThread extends Thread {
     }
 
     private void drawGame() {
-        if (graphHolder != null) {
-            Canvas canvas = graphHolder.lockCanvas();
-            if (canvas != null) {
-                canvas.drawRGB(255, 255, 255);
-                String textToDraw =
-                        "StockValue: " + gameData.stockValue + "\n " +
-                        "Money: " + gameData.money + "\n " +
-                        "Stocks: " + gameData.stocks;
-                canvas.drawText(textToDraw, 10f, 200f, paint);
-                graphHolder.unlockCanvasAndPost(canvas);
-            }
-        }
+        drawGraph();
     }
 
     @Override
