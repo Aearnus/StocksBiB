@@ -58,6 +58,7 @@ public class UpdateThread extends Thread {
                     graphMax = Math.ceil(Collections.max(graphHistory) / 10) * 10;
                 }
                 String graphMaxString = "$" + graphMax;
+                paint.setColor(Color.BLACK);
                 canvas.drawText("StockValue: " + gameData.stockValue + "\n " +  "Money: " + gameData.money + "\n " +  "Stocks: " + gameData.stocks, 10f, 200f, paint);
                 Rect textBoundingRect = new Rect();
                 paint.getTextBounds(graphMaxString, 0, graphMaxString.length(), textBoundingRect);
@@ -77,24 +78,10 @@ public class UpdateThread extends Thread {
                     float startY = scaleYPoint(graphPoint, graphMax, canvasHeight);
                     float endX = startX - 1;
                     float endY = scaleYPoint(graphHistory.get(graphPointIndex + 1), graphMax, canvasHeight);
-                    canvas.drawLine(
-                            startX, startY,
-                            endX, endY,
-                            paint
-                    );
-                    // TODO: replace all this with rectangles
-                    for (int radius = 1; radius < 2; radius++) {
-                        canvas.drawLine(
-                                startX, startY + radius,
-                                endX, endY + radius,
-                                paint
-                        );
-                        canvas.drawLine(
-                                startX, startY - radius,
-                                endX, endY - radius,
-                                paint
-                        );
-                    }
+                    float rectSize = 20;
+                    float rectSizeHalf = rectSize / 2;
+                    paint.setColor(Color.RED);
+                    canvas.drawRect(startX - rectSizeHalf, startY - rectSizeHalf, startX + rectSizeHalf, startY + rectSizeHalf, paint);
                     graphPointIndex++;
                 }
                 graphHolder.unlockCanvasAndPost(canvas);
@@ -117,13 +104,14 @@ public class UpdateThread extends Thread {
         paint.setStyle(Paint.Style.FILL);
         paint.setTextSize(32);
 
-        graphHistory = new LinkedList<Double>();
+        graphHistory = new LinkedList<>();
         while (doTick) {
             updateGame();
             drawGame();
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
