@@ -33,19 +33,20 @@ public class GameData implements Serializable {
     }
 
     private double stockValueBounding(double inStockValueArgument) {
-        return Math.atan(inStockValueArgument) + (Math.PI / 2);
+        //return Math.atan(inStockValueArgument) + (Math.PI / 2);
+        return Math.abs(inStockValueArgument);
     }
     /**
      * updateTick() is meant to be called every tick
      * It updates things that happen constantly, like stock price changing
      */
     public void updateTick() {
-        // every tick there's a 1/1024 change to change the derivative
-        if (randomGenerator.nextInt(1024) == 1) {
-            stockValueArgumentChange = (2 * randomGenerator.nextDouble()) - 1;
+        // every tick there's a 1/128 change to change the derivative
+        if (randomGenerator.nextInt(128) == 1) {
+            stockValueArgumentChange = (1 * randomGenerator.nextDouble()) - 0.5;
         }
         // euler's integration of argument, with a small noise factor
-        stockValueArgument += stockValueArgumentChange + (randomGenerator.nextDouble() * 0.25) - 0.125;
+        stockValueArgument += stockValueArgumentChange + (randomGenerator.nextDouble() * 0.5) - 0.25;
         stockValue = stockValueBounding(stockValueArgument);
     }
 
