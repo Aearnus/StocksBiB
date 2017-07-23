@@ -5,7 +5,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.view.SurfaceHolder;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,9 +23,12 @@ public class UpdateThread extends Thread {
     GameData gameData;
     boolean doTick;
 
+    //buy/sell fragment stuff
     BuySellFragment buySellFragment;
     SurfaceHolder graphHolder;
     LinkedList<Double> graphHistory;
+    Button buyButton;
+    Button sellButton;
 
     // drawing stuff
     Paint paint;
@@ -32,6 +37,30 @@ public class UpdateThread extends Thread {
         buySellFragment = (BuySellFragment) inBuySellFragment;
         buySellFragment.setUpdateThread(this);
         doTick = true;
+    }
+
+    //TODO: visual feedback. possibly a toast if you don't have enough? it probably shouldn't happen anyway
+    private void buyStock() {
+        GameData.StockTransactionSuccess result = gameData.buyStock();
+        if (result == GameData.StockTransactionSuccess.OK) {
+            toggleBuyButton(true);
+        } else if (result == GameData.StockTransactionSuccess.DISABLE || result == GameData.StockTransactionSuccess.FAIL) {
+            toggleBuyButton(false);
+        }
+    }
+    private void sellStock() {
+        GameData.StockTransactionSuccess result = gameData.sellStock();
+        if (result == GameData.StockTransactionSuccess.OK) {
+            toggleSellButton(true);
+        } else if (result == GameData.StockTransactionSuccess.DISABLE || result == GameData.StockTransactionSuccess.FAIL) {
+            toggleSellButton(false);
+        }
+    }
+    private void toggleBuyButton(boolean enable) {
+
+    }
+    private void toggleSellButton(boolean enable) {
+
     }
 
     public void setGraphHolder(SurfaceHolder inGraphHolder) {
@@ -81,7 +110,9 @@ public class UpdateThread extends Thread {
                     float rectSize = 20;
                     float rectSizeHalf = rectSize / 2;
                     paint.setColor(Color.RED);
-                    canvas.drawRect(startX - rectSizeHalf, startY - rectSizeHalf, startX + rectSizeHalf, startY + rectSizeHalf, paint);
+                    paint.setStrokeWidth(20);
+                    //canvas.drawRect(startX - rectSizeHalf, startY - rectSizeHalf, startX + rectSizeHalf, startY + rectSizeHalf, paint);
+                    canvas.drawLine(startX, startY, endX, endY, paint);
                     graphPointIndex++;
                 }
                 graphHolder.unlockCanvasAndPost(canvas);
