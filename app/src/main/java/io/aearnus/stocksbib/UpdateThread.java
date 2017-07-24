@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.view.SurfaceHolder;
+import android.view.View;
 import android.widget.Button;
 
 import java.util.ArrayList;
@@ -149,7 +150,19 @@ public class UpdateThread extends Thread {
         if (buySellFragmentReady == true) {
             if (buyButton == null) {
                 buyButton = buySellFragment.getView().findViewById(R.id.buyButton);
+                buyButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        buyStock();
+                    }
+                });
                 sellButton = buySellFragment.getView().findViewById(R.id.sellButton);
+                sellButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        sellStock();
+                    }
+                });
             }
         }
         while (doTick) {
