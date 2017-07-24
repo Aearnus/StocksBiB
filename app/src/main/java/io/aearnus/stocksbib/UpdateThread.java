@@ -106,23 +106,19 @@ public class UpdateThread extends Thread {
                 if (graphHistory.size() >= 2048) {
                     graphHistory.remove(2047);
                 }
-                int graphPointIndex = 0;
-                for(double graphPoint : graphHistory) {
-                    if (graphPointIndex >= graphHistory.size() - 2) {
-                        // avoid accessing a nonexistent point
-                        break;
-                    }
+                double graphPoint;
+                //TODO: optimize
+                // avoid accessing a nonexistent point                             vvvvv
+                for (int graphPointIndex = 0; graphPointIndex < graphHistory.size() - 5; graphPointIndex += 2) {
+                    graphPoint = graphHistory.get(graphPointIndex);
                     float startX = canvasWidth - graphPointIndex;
                     float startY = scaleYPoint(graphPoint, graphMax, canvasHeight);
                     float endX = startX - 1;
-                    float endY = scaleYPoint(graphHistory.get(graphPointIndex + 1), graphMax, canvasHeight);
-                    float rectSize = 20;
-                    float rectSizeHalf = rectSize / 2;
+                    float endY = scaleYPoint(graphHistory.get(graphPointIndex + 2), graphMax, canvasHeight);
                     paint.setColor(Color.RED);
-                    paint.setStrokeWidth(20);
                     //canvas.drawRect(startX - rectSizeHalf, startY - rectSizeHalf, startX + rectSizeHalf, startY + rectSizeHalf, paint);
                     canvas.drawLine(startX, startY, endX, endY, paint);
-                    graphPointIndex++;
+                    //graphPointIndex++;
                 }
                 graphHolder.unlockCanvasAndPost(canvas);
             }
@@ -143,6 +139,8 @@ public class UpdateThread extends Thread {
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.FILL);
         paint.setTextSize(32);
+        paint.setStrokeWidth(20);
+        paint.setStrokeCap(Paint.Cap.ROUND);
 
         graphHistory = new LinkedList<>();
 
