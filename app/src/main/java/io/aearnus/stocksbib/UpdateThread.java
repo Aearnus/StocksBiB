@@ -24,6 +24,7 @@ public class UpdateThread extends Thread {
     boolean doTick;
 
     //buy/sell fragment stuff
+    boolean buySellFragmentReady;
     BuySellFragment buySellFragment;
     SurfaceHolder graphHolder;
     LinkedList<Double> graphHistory;
@@ -57,10 +58,17 @@ public class UpdateThread extends Thread {
         }
     }
     private void toggleBuyButton(boolean enable) {
-
+        if (buySellFragmentReady) {
+            buyButton.setEnabled(enable);
+        }
     }
     private void toggleSellButton(boolean enable) {
-
+        if (buySellFragmentReady) {
+            sellButton.setEnabled(enable);
+        }
+    }
+    public void isBuySellFragmentReady(boolean isIt) {
+        buySellFragmentReady = isIt;
     }
 
     public void setGraphHolder(SurfaceHolder inGraphHolder) {
@@ -136,6 +144,14 @@ public class UpdateThread extends Thread {
         paint.setTextSize(32);
 
         graphHistory = new LinkedList<>();
+
+        // get buy/sell fragment layout stuff
+        if (buySellFragmentReady == true) {
+            if (buyButton == null) {
+                buyButton = buySellFragment.getView().findViewById(R.id.buyButton);
+                sellButton = buySellFragment.getView().findViewById(R.id.sellButton);
+            }
+        }
         while (doTick) {
             updateGame();
             drawGame();

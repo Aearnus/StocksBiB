@@ -40,11 +40,13 @@ public class BuySellFragment extends Fragment {
         stockGraph = view.findViewById(R.id.stockGraph);
         hookGraphCallback();
         Log.i("BUYSELLFRAGMENT", "Fragment created");
+        updateThread.isBuySellFragmentReady(true);
         return view;
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        updateThread.isBuySellFragmentReady(false);
         isGraphHooked = false;
         Log.i("BUYSELLFRAGMENT", "Fragment destroyed");
     }

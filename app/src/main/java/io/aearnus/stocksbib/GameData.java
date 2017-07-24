@@ -24,7 +24,7 @@ public class GameData implements Serializable {
     public GameData() {
         randomGenerator = new Random();
 
-        money = 0.0;
+        money = 100.0;
         stocks = 0;
 
         stockValueArgumentChange = 0.0;
