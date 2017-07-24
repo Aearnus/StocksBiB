@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * Created by tyler on 7/17/17.
@@ -16,12 +17,14 @@ public class BuySellFragment extends Fragment {
     SurfaceView stockGraph;
     UpdateThread updateThread;
     GraphCallback graphCallback;
+    Button buyButton;
+    Button sellButton;
     boolean isGraphHooked = false;
     public void setUpdateThread(UpdateThread inUpdateThread) {
         updateThread = inUpdateThread;
-        hookGraphCallback();
+        hookCallbacks();
     }
-    private void hookGraphCallback() {
+    private void hookCallbacks() {
         // creates the GraphCallback item if and only if it doesn't exist
         if (graphCallback == null) {
             graphCallback = new GraphCallback(updateThread);
@@ -31,6 +34,7 @@ public class BuySellFragment extends Fragment {
         if (stockGraph != null && updateThread != null && !isGraphHooked) {
             stockGraph.getHolder().addCallback(graphCallback);
             isGraphHooked = true;
+            updateThread.setBuySellButtons(buyButton, sellButton);
         }
     }
     @Override
@@ -38,15 +42,15 @@ public class BuySellFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_stock_buy_sell, container, false);
         // attach the SurfaceHolder.Callback to the stock graph to draw to it
         stockGraph = view.findViewById(R.id.stockGraph);
-        hookGraphCallback();
+        buyButton = view.findViewById(R.id.buyButton);
+        sellButton = view.findViewById(R.id.sellButton);
+        hookCallbacks();
         Log.i("BUYSELLFRAGMENT", "Fragment created");
-        updateThread.isBuySellFragmentReady(true);
         return view;
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        updateThread.isBuySellFragmentReady(false);
         isGraphHooked = false;
         Log.i("BUYSELLFRAGMENT", "Fragment destroyed");
     }

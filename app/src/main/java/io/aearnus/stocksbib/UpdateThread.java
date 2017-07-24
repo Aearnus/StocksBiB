@@ -25,7 +25,6 @@ public class UpdateThread extends Thread {
     boolean doTick;
 
     //buy/sell fragment stuff
-    boolean buySellFragmentReady;
     BuySellFragment buySellFragment;
     SurfaceHolder graphHolder;
     LinkedList<Double> graphHistory;
@@ -59,17 +58,30 @@ public class UpdateThread extends Thread {
         }
     }
     private void toggleBuyButton(boolean enable) {
-        if (buySellFragmentReady) {
+        if (buyButton != null) {
             buyButton.setEnabled(enable);
         }
     }
     private void toggleSellButton(boolean enable) {
-        if (buySellFragmentReady) {
+        if (sellButton != null) {
             sellButton.setEnabled(enable);
         }
     }
-    public void isBuySellFragmentReady(boolean isIt) {
-        buySellFragmentReady = isIt;
+    public void setBuySellButtons(Button buy, Button sell) {
+        buyButton = buy;
+        buyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buyStock();
+            }
+        });
+        sellButton = sell;
+        sellButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sellStock();
+            }
+        });
     }
 
     public void setGraphHolder(SurfaceHolder inGraphHolder) {
@@ -109,12 +121,12 @@ public class UpdateThread extends Thread {
                 double graphPoint;
                 //TODO: optimize
                 // avoid accessing a nonexistent point                             vvvvv
-                for (int graphPointIndex = 0; graphPointIndex < graphHistory.size() - 5; graphPointIndex += 2) {
+                for (int graphPointIndex = 0; graphPointIndex < graphHistory.size() - 2; graphPointIndex += 1) {
                     graphPoint = graphHistory.get(graphPointIndex);
                     float startX = canvasWidth - graphPointIndex;
                     float startY = scaleYPoint(graphPoint, graphMax, canvasHeight);
                     float endX = startX - 1;
-                    float endY = scaleYPoint(graphHistory.get(graphPointIndex + 2), graphMax, canvasHeight);
+                    float endY = scaleYPoint(graphHistory.get(graphPointIndex + 1), graphMax, canvasHeight);
                     paint.setColor(Color.RED);
                     //canvas.drawRect(startX - rectSizeHalf, startY - rectSizeHalf, startX + rectSizeHalf, startY + rectSizeHalf, paint);
                     canvas.drawLine(startX, startY, endX, endY, paint);
@@ -144,25 +156,6 @@ public class UpdateThread extends Thread {
 
         graphHistory = new LinkedList<>();
 
-        // get buy/sell fragment layout stuff
-        if (buySellFragmentReady == true) {
-            if (buyButton == null) {
-                buyButton = buySellFragment.getView().findViewById(R.id.buyButton);
-                buyButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        buyStock();
-                    }
-                });
-                sellButton = buySellFragment.getView().findViewById(R.id.sellButton);
-                sellButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        sellStock();
-                    }
-                });
-            }
-        }
         while (doTick) {
             updateGame();
             drawGame();
